@@ -38,129 +38,134 @@ class _RiddlePageState extends State<RiddlePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.orange,
-      body: ListView(
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.all(8.0),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              LinearPercentIndicator(
-                width: 250,
-                lineHeight: 16.0,
-                percent: widget.percentDouble,
-                center: Text(
-                  widget.percentStr,
-                  style: new TextStyle(fontSize: 16.0,fontWeight: FontWeight.bold,fontFamily: 'BlackPearl'),
-                ),
-                trailing: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ImageIcon(AssetImage('images/treasureIcon.png')),
-                ),
-                linearStrokeCap: LinearStrokeCap.roundAll,
-                backgroundColor: Colors.grey,
-                progressColor: Colors.blue,
-              ),
-            ],
-          ),
-          Padding(
-            padding: EdgeInsets.all(4.0),
-          ),
-          Text(
-            widget.title,
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 30.0, fontFamily: 'BlackPearl'),
-          ),
-          Center(
-            child: Container(
-                width: 300,
-                height: 170,
-                child: Image.asset(
-                  widget.imagePath,
-                )),
-          ),
-          Container(
-            margin: EdgeInsets.only(top: 0, bottom: 8, left: 16, right: 16),
-            padding: EdgeInsets.all(8.0),
-            child: Text(
-              widget.textRiddle,
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 18.0, fontFamily: 'Primitive'),
+    return GestureDetector(
+      onTap:  () {
+        FocusScope.of(context).requestFocus(new FocusNode());
+      },
+      child: Scaffold(
+        backgroundColor: Colors.orange,
+        body: ListView(
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.all(8.0),
             ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                width: 180,
-                height: 50,
-                child: TextField(
-                  controller: myController,
-                  onChanged: (text) {
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                LinearPercentIndicator(
+                  width: 250,
+                  lineHeight: 16.0,
+                  percent: widget.percentDouble,
+                  center: Text(
+                    widget.percentStr,
+                    style: new TextStyle(fontSize: 16.0,fontWeight: FontWeight.bold,fontFamily: 'BlackPearl'),
+                  ),
+                  trailing: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ImageIcon(AssetImage('images/treasureIcon.png')),
+                  ),
+                  linearStrokeCap: LinearStrokeCap.roundAll,
+                  backgroundColor: Colors.grey,
+                  progressColor: Colors.blue,
+                ),
+              ],
+            ),
+            Padding(
+              padding: EdgeInsets.all(4.0),
+            ),
+            Text(
+              widget.title,
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 30.0, fontFamily: 'BlackPearl'),
+            ),
+            Center(
+              child: Container(
+                  width: 300,
+                  height: 170,
+                  child: Image.asset(
+                    widget.imagePath,
+                  )),
+            ),
+            Container(
+              margin: EdgeInsets.only(top: 0, bottom: 8, left: 16, right: 16),
+              padding: EdgeInsets.all(8.0),
+              child: Text(
+                widget.textRiddle,
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 18.0, fontFamily: 'Primitive'),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  width: 180,
+                  height: 50,
+                  child: TextField(
+                    controller: myController,
+                    onChanged: (text) {
+                      setState(() {
+                        errorHintShow = false;
+                      });
+                    },
+                    textCapitalization: TextCapitalization.characters,
+                    maxLines: 1,
+                    maxLength: 8,
+                    cursorColor: Colors.orange,
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.red,
+                    ),
+                    decoration: InputDecoration(
+                        filled: true,
+                        errorText: !errorHintShow ? "" : "Wrong code captain!",
+                        errorStyle: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                        fillColor: Colors.white,
+                        prefixIcon: Icon(Icons.lock),
+                        contentPadding: EdgeInsets.all(12.0),
+                        border: OutlineInputBorder(),
+                        labelStyle:
+                            TextStyle(fontSize: 18, fontFamily: 'BlackPearl' ),
+                        hintText: 'CODE',
+                        hintStyle:
+                            TextStyle(fontSize: 18, fontFamily: 'BlackPearl',)),
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: EdgeInsets.all(12.0),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                RaisedButton(
+                  splashColor: Colors.white,
+                  elevation: 5,
+                  shape: StadiumBorder(),
+                  color: Colors.black,
+                  child: Text(
+                    'Validate',
+                    style:
+                        TextStyle(color: Colors.orange, fontFamily: 'BlackPearl'),
+                  ),
+                  onPressed: () {
                     setState(() {
-                      errorHintShow = false;
+                      if (myController.text.toLowerCase() == widget.code) {
+                        _getCurrentRiddle();
+                        _saveData();
+                        Navigator.pushReplacementNamed(context, widget.routeName);
+                      } else
+                        errorHintShow = true;
                     });
                   },
-                  textCapitalization: TextCapitalization.characters,
-                  maxLines: 1,
-                  maxLength: 8,
-                  cursorColor: Colors.orange,
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.red,
-                  ),
-                  decoration: InputDecoration(
-                      filled: true,
-                      errorText: !errorHintShow ? "" : "Wrong code captain!",
-                      errorStyle: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                      fillColor: Colors.white,
-                      prefixIcon: Icon(Icons.lock),
-                      contentPadding: EdgeInsets.all(12.0),
-                      border: OutlineInputBorder(),
-                      labelStyle:
-                          TextStyle(fontSize: 18, fontFamily: 'BlackPearl' ),
-                      hintText: 'CODE',
-                      hintStyle:
-                          TextStyle(fontSize: 18, fontFamily: 'BlackPearl',)),
                 ),
-              ),
-            ],
-          ),
-          Padding(
-            padding: EdgeInsets.all(12.0),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              RaisedButton(
-                splashColor: Colors.white,
-                elevation: 5,
-                shape: StadiumBorder(),
-                color: Colors.black,
-                child: Text(
-                  'Validate',
-                  style:
-                      TextStyle(color: Colors.orange, fontFamily: 'BlackPearl'),
-                ),
-                onPressed: () {
-                  setState(() {
-                    if (myController.text.toLowerCase() == widget.code) {
-                      _getCurrentRiddle();
-                      _saveData();
-                      Navigator.pushReplacementNamed(context, widget.routeName);
-                    } else
-                      errorHintShow = true;
-                  });
-                },
-              ),
-            ],
-          )
-        ],
+              ],
+            )
+          ],
+        ),
       ),
     );
   }
